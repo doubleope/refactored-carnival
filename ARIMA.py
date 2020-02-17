@@ -22,15 +22,17 @@ results_location = "/home/ope/PyEMD/Documents/Projects/refactored-carnival/Resul
 name_of_result = "amzn"
 complete_name = os.path.join(results_location, name_of_result + ".txt")
 
+
 def RMSE(x):
     return sqrt(x)
+
 
 if __name__ == '__main__':
     time_step_lag = 1
     HORIZON = 1
 
-    target = pd.read_csv('/home/ope/PyEMD/Documents/Projects/refactored-carnival/data/AMZN_data.csv', header=0, usecols=[1])
-
+    target = pd.read_csv('/home/ope/PyEMD/Documents/Projects/refactored-carnival/data/AMZN_data.csv', header=0,
+                         usecols=[1])
 
     dt_idx = DatetimeIndex(freq='d', start='2010-02-08 00:00:00', periods=2518)
 
@@ -82,4 +84,3 @@ if __name__ == '__main__':
 
     print("mse:", mse, 'rmse_predict:', rmse_predict, "mae:", mae, "mape:", mape_v, "r2:", r_square,
           "meae:", meae, "evs:", evs, file=file)
-
