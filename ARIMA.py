@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,25 +19,26 @@ from math import sqrt
 from common.utils import mape
 
 results_location = "/home/ope/PyEMD/Documents/Projects/refactored-carnival/Results/ARIMA/"
-name_of_result = "exchange_rates"
+name_of_result = "amzn"
 complete_name = os.path.join(results_location, name_of_result + ".txt")
 
 def RMSE(x):
     return sqrt(x)
 
 if __name__ == '__main__':
-    time_step_lag = 12
+    time_step_lag = 1
     HORIZON = 1
 
-    target = pd.read_csv('/home/ope/Documents/Projects/self-boosted-ts/data/exchange_rate.txt', header=0, usecols=[0])
+    target = pd.read_csv('/home/ope/PyEMD/Documents/Projects/refactored-carnival/data/AMZN_data.csv', header=0, usecols=[1])
 
-    dt_idx = DatetimeIndex(freq='d', start='1990-01-01 00:00:00', periods=7588)
+
+    dt_idx = DatetimeIndex(freq='d', start='2010-02-08 00:00:00', periods=2518)
 
     target.index = dt_idx
 
-    target.to_csv("time_exchange_rage.csv")
+    target.to_csv("Targets/amzn_target.csv")
     series = target
-    series = series[['rate']]
+    series = series[['High']]
 
     X = series.values
     size = int(len(X) * 0.66)
