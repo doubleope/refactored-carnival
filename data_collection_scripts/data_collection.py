@@ -9,7 +9,7 @@ import matplotlib
 # ts = TimeSeries(key=AV_key, output_format='pandas')
 
 
-FAANG = ['FB', 'AAPL', 'AMZN', 'NFLX', 'GOOG']
+FAANG = ['fb', 'aapl', 'amzn', 'nflx', 'goog']
 # companies = ["AAPL", "AMZN", "UBER", "NOK", "F", "GE", "FB", "NFLX", "GOOG",
 #             "PINS", "AMD", "MSFT", "IBM", "INTC", "BAC", "SNAP", "TWTR", "T"]
 
