@@ -35,7 +35,7 @@ if __name__ == '__main__':
     imfs_count = 0 # set equal to zero for not considering IMFs features
 
     data_dir = './data'
-    output_dir = '/home/ope/PyEMD/Documents/Projects/self-boosted-ts/output'
+    output_dir = './output'
 
 
 
