@@ -9,11 +9,11 @@ import matplotlib
 # ts = TimeSeries(key=AV_key, output_format='pandas')
 
 
-FAANG = ['FB', 'AAPL', 'AMZN', 'NFLX', 'GOOG']
+FAANG = ['fb', 'aapl', 'amzn', 'nflx', 'goog']
 # companies = ["AAPL", "AMZN", "UBER", "NOK", "F", "GE", "FB", "NFLX", "GOOG",
 #             "PINS", "AMD", "MSFT", "IBM", "INTC", "BAC", "SNAP", "TWTR", "T"]
 
 for company_name in FAANG:
     #start date might say 1950, only goes as far as data is available
-    df = dr.get_data_yahoo(company_name, start = '1950-02-08', end = '2020-02-08')
+    df = dr.get_data_yahoo(company_name, start = '2004-08-19', end = '2020-02-21')
     df.to_csv("./data/"+ company_name +".csv")
