@@ -51,29 +51,17 @@ def load_data(data_dir):
     return df
 
 
-def load_data_full(data_dir, datasource='electricity', imfs_count=13, freq='H'):
+def load_data_full(data_dir, datasource, imfs_count=13, freq='H'):
     """Load the GEFCom 2014 energy load data"""
     target =None
     start_date = None
     end_date = None
 
-    if datasource == 'electricity':
-        target = pd.read_csv(os.path.join(data_dir, 'hourly_clean_electricity.csv'), header=0, parse_dates={"timestamp": [0]})
-        start_date = min(target['timestamp'])
-        end_date = max(target['timestamp'])
-        target = target.drop('timestamp', axis=1)
-    elif datasource == 'temperature':
-        target = pd.read_csv(os.path.join(data_dir, 'temperature.csv'), header=0, parse_dates={"timestamp": [0]})
-        start_date = min(target['timestamp'])
-        end_date = max(target['timestamp'])
-        target = target.drop('timestamp', axis=1)
-    elif datasource == 'exchange-rate':
-        target = pd.read_csv(os.path.join(data_dir, 'time_exchange_rate.csv'), header=0, parse_dates={"timestamp": [0]})
-        start_date = min(target['timestamp'])
-        end_date = max(target['timestamp'])
-        target = target.drop('timestamp', axis=1)
-    else:
-        raise Exception('Not support the data source:', datasource)
+    target = pd.read_csv(os.path.join(data_dir, datasource + '.csv'), header=0, parse_dates={"timestamp": [0]})
+    start_date = min(target['timestamp'])
+    end_date = max(target['timestamp'])
+    target = target.drop('timestamp', axis=1)
+
     imfs =[]
     imf_lables = []
     imfs_dir = data_dir + '/' + datasource
