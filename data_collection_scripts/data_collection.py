@@ -16,4 +16,4 @@ FAANG = ['FB', 'AAPL', 'AMZN', 'NFLX', 'GOOG']
 for company_name in FAANG:
     #start date might say 1950, only goes as far as data is available
     df = dr.get_data_yahoo(company_name, start = '1950-02-08', end = '2020-02-08')
-    df.to_csv("../data/"+ company_name +"_data.csv")
+    df.to_csv("../data/"+ company_name +".csv")
