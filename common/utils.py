@@ -51,17 +51,23 @@ def load_data(data_dir):
     return df
 
 
-def load_data_full(data_dir, datasource, imfs_count=13, freq='H'):
+def load_data_full(data_dir, datasource, imfs_count=13, freq='D'):
     """Load the GEFCom 2014 energy load data"""
     target =None
     start_date = None
     end_date = None
 
     target = pd.read_csv(os.path.join(data_dir, datasource + '.csv'), header=0, parse_dates={"timestamp": [0]})
+    target.to_csv('./output/amzin_test.csv')
     start_date = min(target['timestamp'])
     end_date = max(target['timestamp'])
-    target = target.drop('timestamp', axis=1)
 
+    print(start_date)
+
+    target = target.drop('timestamp', axis=1)
+    target.to_csv('./output/amezin_test.csv')
+    target = pd.DataFrame(target['High'])
+    target.to_csv('./output/amezin_test.csv')
     imfs =[]
     imf_lables = []
     imfs_dir = data_dir + '/' + datasource
@@ -73,11 +79,12 @@ def load_data_full(data_dir, datasource, imfs_count=13, freq='H'):
 
     df = pd.concat([target] + imfs, axis=1)
 
-    df.columns = ["load"] + imf_lables
+    df.columns = ["High"] + imf_lables
 
     # dt_idx = DatetimeIndex(freq='H', start='2011-01-01 00:00:00', end='2011-12-31 23:00:00')
     df.index = pd.date_range(start_date, end_date, freq=freq)
 
+    pd.write_csv('./data/output/amzin_test.csv', df)
     return df
 
 

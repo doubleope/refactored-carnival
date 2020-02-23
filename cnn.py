@@ -56,10 +56,8 @@ if __name__ == '__main__':
 
     print("count data rows=", multi_time_series.count)
 
-    print(multi_time_series.iloc[28051, :])
-
-    valid_start_dt = '2013-05-26 14:00:00'
-    test_start_dt = '2014-03-14 19:00:00'
+    valid_start_dt = '2013-12-06'
+    test_start_dt = '2017-01-12'
 
     train_inputs, valid_inputs, test_inputs, y_scaler = split_train_validation_test(multi_time_series,
                                                                                     valid_start_time=valid_start_dt,
