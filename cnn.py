@@ -64,15 +64,15 @@ if __name__ == '__main__':
                                                                                     test_start_time=test_start_dt,
                                                                                     time_step_lag=time_step_lag,
                                                                                     horizon=HORIZON,
-                                                                                    features=["load"],
-                                                                                    target='load'
+                                                                                    features=["High"],
+                                                                                    target='High'
                                                                                     )
 
     X_train = train_inputs['X']
-    y_train = train_inputs['target_load']
+    y_train = train_inputs['target_High']
 
     X_valid = valid_inputs['X']
-    y_valid = valid_inputs['target_load']
+    y_valid = valid_inputs['target_High']
 
     print("train_X shape", X_train.shape)
     print("valid_X shape", X_valid.shape)
@@ -115,7 +115,7 @@ if __name__ == '__main__':
 
     # Test the model
     X_test = test_inputs['X']
-    y1_test = test_inputs['target_load']
+    y1_test = test_inputs['target_High']
 
     y1_preds = model.predict(X_test)
 

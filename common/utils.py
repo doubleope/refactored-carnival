@@ -58,16 +58,14 @@ def load_data_full(data_dir, datasource, imfs_count=13, freq='D'):
     end_date = None
 
     target = pd.read_csv(os.path.join(data_dir, datasource + '.csv'), header=0, parse_dates={"timestamp": [0]})
-    target.to_csv('./output/amzin_test.csv')
+    dt_idx = DatetimeIndex(target.timestamp)
     start_date = min(target['timestamp'])
     end_date = max(target['timestamp'])
 
-    print(start_date)
-
     target = target.drop('timestamp', axis=1)
-    target.to_csv('./output/amezin_test.csv')
+
     target = pd.DataFrame(target['High'])
-    target.to_csv('./output/amezin_test.csv')
+
     imfs =[]
     imf_lables = []
     imfs_dir = data_dir + '/' + datasource
@@ -82,9 +80,9 @@ def load_data_full(data_dir, datasource, imfs_count=13, freq='D'):
     df.columns = ["High"] + imf_lables
 
     # dt_idx = DatetimeIndex(freq='H', start='2011-01-01 00:00:00', end='2011-12-31 23:00:00')
-    df.index = pd.date_range(start_date, end_date, freq=freq)
+    df.index = dt_idx
 
-    pd.write_csv('./data/output/amzin_test.csv', df)
+    target.to_csv('./output/amezin_test.csv')
     return df
 
 
@@ -106,7 +104,7 @@ def load_data_one_source(data_dir):
 
 
 def split_train_validation_test(multi_time_series_df, valid_start_time, test_start_time, features,
-                                time_step_lag=1, horizon=1, target='target', time_format='%Y-%m-%d %H:%M:%S', freq='H'):
+                                time_step_lag=1, horizon=1, target='target', time_format='%Y-%m-%d', freq='D'):
 
     if not isinstance(features, list) or len(features) < 1:
         raise Exception("Bad input for features. It must be an array of dataframe colummns used")
@@ -116,9 +114,9 @@ def split_train_validation_test(multi_time_series_df, valid_start_time, test_sta
 
     X_scaler = MinMaxScaler()
 
-    if 'load' in features:
+    if 'High' in features:
         y_scaler = MinMaxScaler()
-        y_scaler.fit(train[['load']])
+        y_scaler.fit(train[['High']])
     else:
         y_scaler = MinMaxScaler()
 
