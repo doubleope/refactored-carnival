@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import matplotlib.pyplot as plt
 from pandas import DatetimeIndex
+from sklearn.preprocessing import MinMaxScaler
 
 if __name__ == '__main__':
     data_dir = './data'
@@ -26,4 +27,18 @@ if __name__ == '__main__':
         .plot(y=['train', 'validation', 'test'], figsize=(15, 8), fontsize=12)
     plt.xlabel('timestamp', fontsize=12)
     plt.ylabel('High', fontsize=12)
+    plt.show()
+
+    T = 10
+    HORIZON = 1
+
+    train = data.copy()[data.index < valid_start_dt][['High']]
+
+    scaler = MinMaxScaler()
+    train['High'] = scaler.fit_transform(train)
+    train.head(10)
+
+    data[data.index < valid_start_dt][['High']].rename(columns={'High': 'original High'}).plot.hist(bins=100,
+                                                                                                        fontsize=12)
+    train.rename(columns={'High': 'scaled High'}).plot.hist(bins=100, fontsize=12)
     plt.show()
