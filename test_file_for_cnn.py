@@ -151,4 +151,38 @@ if __name__ == '__main__':
     plot_df.plot(logy=True, figsize=(10, 10), fontsize=12)
     plt.xlabel('epoch', fontsize=12)
     plt.ylabel('loss', fontsize=12)
+    #plt.show()
+
+    look_back_dt = dt.datetime.strptime(test_start_dt, '%Y-%m-%d') - dt.timedelta(days=T - 1)
+    test = data.copy()[test_start_dt:][['High']]
+    print(test.head())
+
+    test['High'] = scaler.transform(test)
+    print(test.head())
+
+    test_shifted = test.copy()
+    test_shifted['y_t+1'] = test_shifted['High'].shift(-1, freq='D')
+    for t in range(1, T + 1):
+        test_shifted['High_t-' + str(T - t)] = test_shifted['High'].shift(T - t, freq='D')
+    #test_shifted = test_shifted.dropna(how='any')
+    y_test = test_shifted['y_t+1'].as_matrix()
+    X_test = test_shifted[['High_t-' + str(T - t) for t in range(1, T + 1)]].as_matrix()
+    X_test = X_test[..., np.newaxis]
+
+    predictions = model.predict(X_test)
+    print(predictions)
+
+    eval_df = pd.DataFrame(predictions, columns=['t+' + str(t) for t in range(1, HORIZON + 1)])
+    eval_df['timestamp'] = test_shifted.index
+    eval_df = pd.melt(eval_df, id_vars='timestamp', value_name='prediction', var_name='h')
+    eval_df['actual'] = np.transpose(y_test).ravel()
+    eval_df[['prediction', 'actual']] = scaler.inverse_transform(eval_df[['prediction', 'actual']])
+    print(eval_df.head())
+
+    mape(eval_df['prediction'], eval_df['actual'])
+
+    eval_df[eval_df.timestamp < '2014-11-08'].plot(x='timestamp', y=['prediction', 'actual'], style=['r', 'b'],
+                                                   figsize=(15, 8))
+    plt.xlabel('timestamp', fontsize=12)
+    plt.ylabel('load', fontsize=12)
     plt.show()
