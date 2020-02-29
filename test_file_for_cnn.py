@@ -5,6 +5,27 @@ import numpy as np
 from pandas import DatetimeIndex
 import datetime as dt
 from sklearn.preprocessing import MinMaxScaler
+from keras.models import Model, Sequential
+from keras.layers import Conv1D, Dense, Flatten
+from keras.callbacks import EarlyStopping, ModelCheckpoint
+import os
+import warnings
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import datetime as dt
+
+
+from common.utils import load_data, mape
+from collections import UserDict
+from glob import glob
+from IPython.display import Image
+pd.options.display.float_format = '{:,.2f}'.format
+np.set_printoptions(precision=2)
+warnings.filterwarnings("ignore")
+
+
+from common.utils import load_data, mape
 
 if __name__ == '__main__':
     data_dir = './data'
@@ -90,3 +111,44 @@ if __name__ == '__main__':
 
     print(y_valid.shape)
     print(X_valid.shape)
+
+    LATENT_DIM = 5
+    KERNEL_SIZE = 2
+    BATCH_SIZE = 32
+    EPOCHS = 10
+
+    model = Sequential()
+    model.add(
+        Conv1D(LATENT_DIM, kernel_size=KERNEL_SIZE, padding='causal', strides=1, activation='relu', dilation_rate=1,
+               input_shape=(T, 1)))
+    model.add(
+        Conv1D(LATENT_DIM, kernel_size=KERNEL_SIZE, padding='causal', strides=1, activation='relu', dilation_rate=2))
+    model.add(
+        Conv1D(LATENT_DIM, kernel_size=KERNEL_SIZE, padding='causal', strides=1, activation='relu', dilation_rate=4))
+    model.add(Flatten())
+    model.add(Dense(HORIZON, activation='linear'))
+
+    print(model.summary())
+
+    model.compile(optimizer='Adam', loss='mse')
+
+    earlystop = EarlyStopping(monitor='val_loss', min_delta=0, patience=5)
+
+    best_val = ModelCheckpoint('model_{epoch:02d}.h5', save_best_only=True, mode='min', period=1)
+
+    history = model.fit(X_train,
+                        y_train,
+                        batch_size=BATCH_SIZE,
+                        epochs=EPOCHS,
+                        validation_data=(X_valid, y_valid),
+                        callbacks=[earlystop, best_val],
+                        verbose=1)
+
+    best_epoch = np.argmin(np.array(history.history['val_loss'])) + 1
+    #model.load_weights("model_{:02d}.h5".format(best_epoch))
+
+    plot_df = pd.DataFrame.from_dict({'train_loss': history.history['loss'], 'val_loss': history.history['val_loss']})
+    plot_df.plot(logy=True, figsize=(10, 10), fontsize=12)
+    plt.xlabel('epoch', fontsize=12)
+    plt.ylabel('loss', fontsize=12)
+    plt.show()
