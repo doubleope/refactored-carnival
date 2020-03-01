@@ -145,7 +145,7 @@ if __name__ == '__main__':
                         verbose=1)
 
     best_epoch = np.argmin(np.array(history.history['val_loss'])) + 1
-    #model.load_weights("model_{:02d}.h5".format(best_epoch))
+    model.load_weights("model_{:02d}.h5".format(best_epoch))
 
     plot_df = pd.DataFrame.from_dict({'train_loss': history.history['loss'], 'val_loss': history.history['val_loss']})
     plot_df.plot(logy=True, figsize=(10, 10), fontsize=12)
@@ -179,7 +179,7 @@ if __name__ == '__main__':
     eval_df[['prediction', 'actual']] = scaler.inverse_transform(eval_df[['prediction', 'actual']])
     print(eval_df.head())
 
-    mape(eval_df['prediction'], eval_df['actual'])
+    print(mape(eval_df['prediction'], eval_df['actual']))
 
     eval_df[eval_df.timestamp < '2014-11-08'].plot(x='timestamp', y=['prediction', 'actual'], style=['r', 'b'],
                                                    figsize=(15, 8))
