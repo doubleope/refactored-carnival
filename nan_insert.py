@@ -5,7 +5,7 @@ from pandas.core.indexes.datetimes import DatetimeIndex
 
 #This script only works if run from the data folder
 
-target = pd.read_csv("amzn.csv")
+target = pd.read_csv("./data/amzn.csv")
 #target.Date is read in as 'str' type
 #converting to datetime
 target.Date = pd.to_datetime(target.Date)
@@ -39,4 +39,4 @@ target_full_noindex = target_full_noindex.sort_values('Date')
 #setting index to 'Date' column
 target_full_noindex = target_full_noindex.set_index('Date')
 
-target_full_noindex
+print(target_full_noindex.head(10))
