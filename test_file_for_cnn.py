@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pandas import DatetimeIndex
 import datetime as dt
+
+from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Model, Sequential
 from keras.layers import Conv1D, Dense, Flatten
@@ -14,6 +16,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import datetime as dt
+from nan_insert import load_modified_data
 
 
 from common.utils import load_data, mape
@@ -28,17 +31,12 @@ warnings.filterwarnings("ignore")
 from common.utils import load_data, mape
 
 if __name__ == '__main__':
-    data_dir = './data'
-    datasource = "amzn"
-    data = pd.read_csv(os.path.join(data_dir, datasource + '.csv'), header=0, parse_dates={"timestamp": [0]})
-    dt_idx = DatetimeIndex(data.timestamp)
+    # data = pd.DataFrame(data['High'])
 
-    data = data.drop('timestamp', axis=1)
-
-    data = pd.DataFrame(data['High'])
-
+    data = load_modified_data("amzn")
+    dt_idx = DatetimeIndex(freq='D', start='2004-08-19', end='2020-02-21')
     data.index = dt_idx
-    print(data.tail())
+
 
     valid_start_dt = '2013-12-06'
     test_start_dt = '2017-01-12'
@@ -75,7 +73,7 @@ if __name__ == '__main__':
     train_shifted = train_shifted.rename(columns={'High': 'High_original'})
     print(train_shifted.head(10))
 
-    #train_shifted = train_shifted.dropna(how='any')
+    train_shifted = train_shifted.dropna(how='any')
 
     print(train_shifted)
 
@@ -104,7 +102,7 @@ if __name__ == '__main__':
     valid_shifted['y+1'] = valid_shifted['High'].shift(-1, freq='D')
     for t in range(1, T + 1):
         valid_shifted['High_t-' + str(T - t)] = valid_shifted['High'].shift(T - t, freq='D')
-    #valid_shifted = valid_shifted.dropna(how='any')
+    valid_shifted = valid_shifted.dropna(how='any')
     y_valid = valid_shifted['y+1'].as_matrix()
     X_valid = valid_shifted[['High_t-' + str(T - t) for t in range(1, T + 1)]].as_matrix()
     X_valid = X_valid[..., np.newaxis]
@@ -164,7 +162,7 @@ if __name__ == '__main__':
     test_shifted['y_t+1'] = test_shifted['High'].shift(-1, freq='D')
     for t in range(1, T + 1):
         test_shifted['High_t-' + str(T - t)] = test_shifted['High'].shift(T - t, freq='D')
-    #test_shifted = test_shifted.dropna(how='any')
+    test_shifted = test_shifted.dropna(how='any')
     y_test = test_shifted['y_t+1'].as_matrix()
     X_test = test_shifted[['High_t-' + str(T - t) for t in range(1, T + 1)]].as_matrix()
     X_test = X_test[..., np.newaxis]
@@ -178,11 +176,17 @@ if __name__ == '__main__':
     eval_df['actual'] = np.transpose(y_test).ravel()
     eval_df[['prediction', 'actual']] = scaler.inverse_transform(eval_df[['prediction', 'actual']])
     print(eval_df.head())
+    mse = mean_squared_error(eval_df['actual'], eval_df['prediction'])
 
-    print(mape(eval_df['prediction'], eval_df['actual']))
+    #print(mape(eval_df['prediction'], eval_df['actual']))
 
-    eval_df[eval_df.timestamp < '2014-11-08'].plot(x='timestamp', y=['prediction', 'actual'], style=['r', 'b'],
+    eval_df[eval_df.timestamp < '2017-01-30'].plot(x='timestamp', y=['prediction', 'actual'], style=['r', 'b'],
                                                    figsize=(15, 8))
     plt.xlabel('timestamp', fontsize=12)
-    plt.ylabel('load', fontsize=12)
+    plt.ylabel('High', fontsize=12)
     plt.show()
+
+    for m in glob('model_*.h5'):
+        os.remove(m)
+
+    print("mse:", mse)

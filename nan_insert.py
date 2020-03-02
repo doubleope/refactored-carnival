@@ -3,44 +3,64 @@ import pandas as pd
 import os
 from pandas.core.indexes.datetimes import DatetimeIndex
 
+
 def load_modified_data(datasource):
-    #This script only works if run from the data folder
     data_dir = './data'
 
     target = pd.read_csv(os.path.join(data_dir, datasource + '.csv'), header=0, parse_dates={"timestamp": [0]})
-    #target.Date is read in as 'str' type
-    #converting to datetime
+    # target.Date is read in as 'str' type
+    # converting to datetime
     target.Date = pd.to_datetime(target.timestamp)
     colnames = ['High', 'Low', 'Open', 'Close', 'Volume', 'Adj Close']
     dt_idx = DatetimeIndex(freq='D', start='2004-08-19', end='2020-02-21')
-    #setting up df as a data frame with datetime index
-    #under column specified as 'Date'
+    # setting up df as a data frame with datetime index
+    # under column specified as 'Date'
     df = pd.DataFrame(dt_idx, columns=['timestamp'])
 
-    #setting nan's
+    # setting nan's
     for i in colnames:
         df[i] = np.nan
 
-    #keep in mind that index has not been set
-    #for either target or df
+    # keep in mind that index has not been set
+    # for either target or df
 
-    #concatenating df observations to target
+    # concatenating df observations to target
     target_full_noindex = pd.concat([target, df], axis=0, join='outer', sort=True)
 
-    #produces array where the position of the second duplicate is marked as True
-    #while that of the first is marked as false, only searches for duplicates based on 'timestamp'
+    # produces array where the position of the second duplicate is marked as True
+    # while that of the first is marked as false, only searches for duplicates based on 'timestamp'
     dupes = target_full_noindex.duplicated(['timestamp'], keep='first')
 
-    #subsetting only observations marked as False (marked as non-duplicates)
-    #P.S. the symbol '~' means negation for pandas
+    # subsetting only observations marked as False (marked as non-duplicates)
+    # P.S. the symbol '~' means negation for pandas
     target_full_noindex = target_full_noindex[~dupes]
 
-    #sorting based on timestamp
+    # sorting based on timestamp
     target_full_noindex = target_full_noindex.sort_values('timestamp')
 
-    #setting index to 'timestamp' column
+    # setting index to 'timestamp' column
     target_full_noindex = target_full_noindex.set_index('timestamp')
+
+    target_full_noindex = data = pd.DataFrame(target_full_noindex['High'])
+
+    target_full_noindex = target_full_noindex.reset_index()
+
+    i = 1
+    while i != len(target_full_noindex.index):
+
+        if np.isnan(target_full_noindex.iloc[i].High):
+            target_full_noindex.loc[i, "High"] = target_full_noindex.iloc[i - 1].High
+        i += 1
+
+    target_full_noindex = pd.DataFrame(target_full_noindex)
+
+
+
 
     return target_full_noindex
 
-print(load_modified_data("amzn").head(10))
+
+#print(load_modified_data("amzn").head())
+#print(load_modified_data("amzn").index)
+# print(load_modified_data("amzn").iloc[1].High)
+# print(load_modified_data("amzn").loc['2020-02-21', :])
