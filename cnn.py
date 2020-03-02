@@ -1,31 +1,19 @@
-import pandas as pd
-import os
-import matplotlib.pyplot as plt
-import numpy as np
+from glob import glob
 from pandas import DatetimeIndex
-import datetime as dt
-
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Model, Sequential
 from keras.layers import Conv1D, Dense, Flatten
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 import os
-import warnings
-import matplotlib.pyplot as plt
+
 import numpy as np
 import pandas as pd
 import datetime as dt
 from nan_insert import load_modified_data
 
 
-from common.utils import load_data, mape
-from collections import UserDict
-from glob import glob
-from IPython.display import Image
-pd.options.display.float_format = '{:,.2f}'.format
-np.set_printoptions(precision=2)
-warnings.filterwarnings("ignore")
+
 
 
 from common.utils import load_data, mape
@@ -41,14 +29,14 @@ if __name__ == '__main__':
     valid_start_dt = '2013-12-06'
     test_start_dt = '2017-01-12'
 
-    data[data.index < valid_start_dt][['High']].rename(columns={'High': 'train'}) \
-        .join(data[(data.index >= valid_start_dt) & (data.index < test_start_dt)][['High']] \
-              .rename(columns={'High': 'validation'}), how='outer') \
-        .join(data[test_start_dt:][['High']].rename(columns={'High': 'test'}), how='outer') \
-        .plot(y=['train', 'validation', 'test'], figsize=(15, 8), fontsize=12)
-    plt.xlabel('timestamp', fontsize=12)
-    plt.ylabel('High', fontsize=12)
-    #plt.show()
+    # data[data.index < valid_start_dt][['High']].rename(columns={'High': 'train'}) \
+    #     .join(data[(data.index >= valid_start_dt) & (data.index < test_start_dt)][['High']] \
+    #           .rename(columns={'High': 'validation'}), how='outer') \
+    #     .join(data[test_start_dt:][['High']].rename(columns={'High': 'test'}), how='outer') \
+    #     .plot(y=['train', 'validation', 'test'], figsize=(15, 8), fontsize=12)
+    # plt.xlabel('timestamp', fontsize=12)
+    # plt.ylabel('High', fontsize=12)
+    # plt.show()
 
     T = 10
     HORIZON = 1
@@ -59,10 +47,10 @@ if __name__ == '__main__':
     train['High'] = scaler.fit_transform(train)
     print(train.head(10))
 
-    data[data.index < valid_start_dt][['High']].rename(columns={'High': 'original High'}).plot.hist(bins=100,
-                                                                                                        fontsize=12)
-    train.rename(columns={'High': 'scaled High'}).plot.hist(bins=100, fontsize=12)
-    #plt.show()
+    # data[data.index < valid_start_dt][['High']].rename(columns={'High': 'original High'}).plot.hist(bins=100,
+    #                                                                                                     fontsize=12)
+    # train.rename(columns={'High': 'scaled High'}).plot.hist(bins=100, fontsize=12)
+    # #plt.show()
 
     train_shifted = train.copy()
     train_shifted['y_t+1'] = train_shifted['High'].shift(-1, freq='D')
@@ -145,11 +133,11 @@ if __name__ == '__main__':
     best_epoch = np.argmin(np.array(history.history['val_loss'])) + 1
     model.load_weights("model_{:02d}.h5".format(best_epoch))
 
-    plot_df = pd.DataFrame.from_dict({'train_loss': history.history['loss'], 'val_loss': history.history['val_loss']})
-    plot_df.plot(logy=True, figsize=(10, 10), fontsize=12)
-    plt.xlabel('epoch', fontsize=12)
-    plt.ylabel('loss', fontsize=12)
-    #plt.show()
+    # plot_df = pd.DataFrame.from_dict({'train_loss': history.history['loss'], 'val_loss': history.history['val_loss']})
+    # plot_df.plot(logy=True, figsize=(10, 10), fontsize=12)
+    # plt.xlabel('epoch', fontsize=12)
+    # plt.ylabel('loss', fontsize=12)
+    # plt.show()
 
     look_back_dt = dt.datetime.strptime(test_start_dt, '%Y-%m-%d') - dt.timedelta(days=T - 1)
     test = data.copy()[test_start_dt:][['High']]
@@ -180,11 +168,11 @@ if __name__ == '__main__':
 
     #print(mape(eval_df['prediction'], eval_df['actual']))
 
-    eval_df[eval_df.timestamp < '2017-01-30'].plot(x='timestamp', y=['prediction', 'actual'], style=['r', 'b'],
-                                                   figsize=(15, 8))
-    plt.xlabel('timestamp', fontsize=12)
-    plt.ylabel('High', fontsize=12)
-    plt.show()
+    # eval_df[eval_df.timestamp < '2017-01-30'].plot(x='timestamp', y=['prediction', 'actual'], style=['r', 'b'],
+    #                                                figsize=(15, 8))
+    # plt.xlabel('timestamp', fontsize=12)
+    # plt.ylabel('High', fontsize=12)
+    # plt.show()
 
     for m in glob('model_*.h5'):
         os.remove(m)
