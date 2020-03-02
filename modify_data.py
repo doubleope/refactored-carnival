@@ -45,22 +45,16 @@ def load_modified_data(datasource):
 
     target_full_noindex = target_full_noindex.reset_index()
 
+    # replace nan values with values of each previous rows
     i = 1
     while i != len(target_full_noindex.index):
-
         if np.isnan(target_full_noindex.iloc[i].High):
             target_full_noindex.loc[i, "High"] = target_full_noindex.iloc[i - 1].High
         i += 1
 
-    target_full_noindex = pd.DataFrame(target_full_noindex)
-
-
-
-
     return target_full_noindex
 
-
-#print(load_modified_data("amzn").head())
-#print(load_modified_data("amzn").index)
+# print(load_modified_data("amzn").head())
+# print(load_modified_data("amzn").index)
 # print(load_modified_data("amzn").iloc[1].High)
 # print(load_modified_data("amzn").loc['2020-02-21', :])
