@@ -4,10 +4,10 @@ import os
 from pandas.core.indexes.datetimes import DatetimeIndex
 
 
-def load_modified_data(datasource):
+def load_modified_data(data_source):
     data_dir = './data'
 
-    target = pd.read_csv(os.path.join(data_dir, datasource + '.csv'), header=0, parse_dates={"timestamp": [0]})
+    target = pd.read_csv(os.path.join(data_dir, data_source + '.csv'), header=0, parse_dates={"timestamp": [0]})
     # target.Date is read in as 'str' type
     # converting to datetime
     target.Date = pd.to_datetime(target.timestamp)
@@ -45,7 +45,7 @@ def load_modified_data(datasource):
 
     target_full_noindex = target_full_noindex.reset_index()
 
-    # replace nan values with values of each previous rows
+    # replace nan values with values of each preceding row
     i = 1
     while i != len(target_full_noindex.index):
         if np.isnan(target_full_noindex.iloc[i].High):

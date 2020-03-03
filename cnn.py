@@ -10,7 +10,7 @@ import os
 import numpy as np
 import pandas as pd
 import datetime as dt
-from nan_insert import load_modified_data
+from modify_data import load_modified_data
 
 
 
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     # data[data.index < valid_start_dt][['High']].rename(columns={'High': 'original High'}).plot.hist(bins=100,
     #                                                                                                     fontsize=12)
     # train.rename(columns={'High': 'scaled High'}).plot.hist(bins=100, fontsize=12)
-    # #plt.show()
+    # plt.show()
 
     train_shifted = train.copy()
     train_shifted['y_t+1'] = train_shifted['High'].shift(-1, freq='D')
