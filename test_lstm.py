@@ -9,7 +9,6 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
 from math import sqrt
-from matplotlib import pyplot
 import numpy
 
 
@@ -128,6 +127,3 @@ for i in range(len(test_scaled)):
 rmse = sqrt(mean_squared_error(raw_values[-12:], predictions))
 print('Test RMSE: %.3f' % rmse)
 # line plot of observed vs predicted
-pyplot.plot(raw_values[-12:])
-pyplot.plot(predictions)
-pyplot.show()
