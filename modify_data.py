@@ -34,8 +34,15 @@ def load_modified_data(data_source):
     # subsetting only observations marked as False (marked as non-duplicates)
     # P.S. the symbol '~' means negation for pandas
     target_full_noindex = target_full_noindex[~dupes]
+
     # sorting based on timestamp
     target_full_noindex = target_full_noindex.sort_values('timestamp')
+
+
+    # target_full_noindex = target_full_noindex.set_index('timestamp')
+
+
+    target_full_noindex = target_full_noindex.reset_index()
 
     # replace nan values with values of each preceding row
     i = 1
@@ -43,13 +50,16 @@ def load_modified_data(data_source):
         if np.isnan(target_full_noindex.iloc[i].High):
             target_full_noindex.loc[i, "High"] = target_full_noindex.iloc[i - 1].High
         i += 1
-    # make timestamp the index column
-    target_full_noindex = target_full_noindex.set_index('timestamp')
 
-    # get only the 'High' column
-    target_full_noindex = pd.DataFrame(target_full_noindex["High"])
+    # get only the timestamp and High column
+    target_full_noindex = target_full_noindex[['timestamp', 'High']].copy()
+
+
+    # setting index to 'timestamp' column
+    target_full_noindex = target_full_noindex.set_index('timestamp')
     return target_full_noindex
 
-
-# print(load_modified_data("amzn").head())
-
+print(load_modified_data("amzn").tail())
+# print(load_modified_data("amzn").index)
+# print(load_modified_data("amzn").iloc[1].High)
+# print(load_modified_data("amzn").loc['2020-02-21', :])
