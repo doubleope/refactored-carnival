@@ -22,8 +22,7 @@ if __name__ == '__main__':
     # data = pd.DataFrame(data['High'])
 
     data = load_modified_data("amzn")
-    dt_idx = DatetimeIndex(freq='D', start='2004-08-19', end='2020-02-21')
-    data.index = dt_idx
+
 
 
     valid_start_dt = '2013-12-06'
