@@ -11,9 +11,12 @@ from keras.layers import LSTM
 from math import sqrt
 from matplotlib import pyplot
 import numpy
-
+from modify_data import load_modified_data
 
 # date-time parsing function for loading the dataset
+
+
+
 def parser(x):
     return datetime.strptime('190' + x, '%Y-%m')
 
@@ -87,7 +90,7 @@ def forecast_lstm(model, batch_size, X):
 
 
 # load dataset
-series = read_csv('shampoo-sales.csv', header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
+series = load_modified_data("amzn")
 
 # transform data to be stationary
 raw_values = series.values

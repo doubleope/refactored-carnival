@@ -51,7 +51,6 @@ def load_modified_data(data_source):
         if np.isnan(target_full_noindex.iloc[i].High):
             target_full_noindex.loc[i, "High"] = target_full_noindex.iloc[i - 1].High
         i += 1
-
     return target_full_noindex
 
 # print(load_modified_data("amzn").head())
