@@ -38,10 +38,6 @@ def load_modified_data(data_source):
     # sorting based on timestamp
     target_full_noindex = target_full_noindex.sort_values('timestamp')
 
-
-    # target_full_noindex = target_full_noindex.set_index('timestamp')
-
-
     target_full_noindex = target_full_noindex.reset_index()
 
     # replace nan values with values of each preceding row
