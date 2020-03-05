@@ -2,6 +2,11 @@ import numpy as np
 import pandas as pd
 import os
 from pandas.core.indexes.datetimes import DatetimeIndex
+import time
+
+prog_start = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+
+
 
 
 def load_modified_data(data_source):
@@ -50,12 +55,17 @@ def load_modified_data(data_source):
     # get only the timestamp and High column
     target_full_noindex = target_full_noindex[['timestamp', 'High']].copy()
 
-
     # setting index to 'timestamp' column
     target_full_noindex = target_full_noindex.set_index('timestamp')
     return target_full_noindex
 
+
 print(load_modified_data("amzn").tail())
+
+prog_end = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+
+
+print("Program started at:", prog_start, "and ended at:", prog_end)
 # print(load_modified_data("amzn").index)
 # print(load_modified_data("amzn").iloc[1].High)
 # print(load_modified_data("amzn").loc['2020-02-21', :])

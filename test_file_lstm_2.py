@@ -11,7 +11,9 @@ from keras.layers import LSTM
 from math import sqrt
 import numpy
 from modify_data import load_modified_data
+import time
 
+prog_start = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
 # frame a sequence as a supervised learning problem
 def timeseries_to_supervised(data, lag=1):
@@ -124,4 +126,10 @@ for i in range(len(test_scaled)):
 # report performance
 rmse = sqrt(mean_squared_error(raw_values[-((len(supervised_values)-training_limit)+1):], predictions))
 print('Test RMSE: %.3f' % rmse)
-# line plot of observed vs predicted
+
+prog_end = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+
+
+print("Program started at:", prog_start, "and ended at:", prog_end)
+
+
