@@ -83,6 +83,7 @@ def forecast_lstm(model, batch_size, X):
 
 series = load_modified_data("amzn")
 series = series.squeeze()
+series = series[0:100]
 
 raw_values = series.values
 diff_values = difference(raw_values, 1)
@@ -121,6 +122,6 @@ for i in range(len(test_scaled)):
     print('Predicted=%f, Expected=%f' % (yhat, expected))
 
 # report performance
-rmse = sqrt(mean_squared_error(raw_values[-12:], predictions))
+rmse = sqrt(mean_squared_error(raw_values[-((len(supervised_values)-training_limit)+1):], predictions))
 print('Test RMSE: %.3f' % rmse)
 # line plot of observed vs predicted
