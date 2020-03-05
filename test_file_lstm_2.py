@@ -84,8 +84,6 @@ def forecast_lstm(model, batch_size, X):
 series = load_modified_data("amzn")
 series = series.squeeze()
 
-series = (series[0: 36])
-
 raw_values = series.values
 diff_values = difference(raw_values, 1)
 
@@ -93,7 +91,7 @@ diff_values = difference(raw_values, 1)
 supervised = timeseries_to_supervised(diff_values, 1)
 supervised_values = supervised.values
 
-# split data into train and test-sets
+# split data into train and test-sets (70% for training and 30% for testing)
 training_limit = int(0.7 * len(supervised_values))
 train, test = supervised_values[0: training_limit - 1], supervised_values[-((len(supervised_values)-training_limit)+1):]
 
