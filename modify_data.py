@@ -12,7 +12,7 @@ def load_modified_data(data_source):
     # converting to datetime
     target.Date = pd.to_datetime(target.timestamp)
     colnames = ['High', 'Low', 'Open', 'Close', 'Volume', 'Adj Close']
-    dt_idx = DatetimeIndex(freq='D', start='2004-08-19', end='2020-02-21')
+    dt_idx = pd.date_range(freq='D', start='2004-08-19', end='2020-02-21')
     # setting up df as a data frame with datetime index
     # under column specified as 'Date'
     df = pd.DataFrame(dt_idx, columns=['timestamp'])
