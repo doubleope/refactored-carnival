@@ -85,7 +85,7 @@ def forecast_lstm(model, batch_size, X):
 
 series = load_modified_data("amzn")
 series = series.squeeze()
-series = series[0:100]
+series = series[0:10]
 
 raw_values = series.values
 diff_values = difference(raw_values, 1)
@@ -129,7 +129,9 @@ print('Test RMSE: %.3f' % rmse)
 
 prog_end = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
+f = open("./output/runtime.txt", "a+")
+f.write("\nProgram started at: " + prog_start + " and ended at: " + prog_end)
+f.close()
 
-print("Program started at:", prog_start, "and ended at:", prog_end)
 
 
