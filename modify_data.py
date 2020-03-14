@@ -1,19 +1,13 @@
 import numpy as np
 import pandas as pd
 import os
-from pandas.core.indexes.datetimes import DatetimeIndex
-import time
-
-prog_start = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
 
 def load_modified_data(data_source):
     data_dir = './data'
 
-    target = pd.read_csv(os.path.join(data_dir, data_source + '.csv'), header=0, parse_dates={"timestamp": [0]})
-    # target.Date is read in as 'str' type
-    # converting to datetime
-    target.Date = pd.to_datetime(target.timestamp)
+    data = pd.read_csv(os.path.join(data_dir, data_source + '.csv'), header=0, parse_dates={"timestamp": [0]})
+
     colnames = ['High', 'Low', 'Open', 'Close', 'Volume', 'Adj Close']
     dt_idx = pd.date_range(freq='D', start='2004-08-19', end='2020-02-21')
     # setting up df as a data frame with datetime index
@@ -28,7 +22,7 @@ def load_modified_data(data_source):
     # for either target or df
 
     # concatenating df observations to target
-    modified_data = pd.concat([target, df], axis=0, join='outer', sort=True)
+    modified_data = pd.concat([data, df], axis=0, join='outer', sort=True)
 
     # produces array where the position of the second duplicate is marked as True
     # while that of the first is marked as false, only searches for duplicates based on 'timestamp'
@@ -57,5 +51,4 @@ def load_modified_data(data_source):
     modified_data = modified_data.set_index('timestamp')
     return modified_data
 
-
-
+print(load_modified_data("amzn").head())

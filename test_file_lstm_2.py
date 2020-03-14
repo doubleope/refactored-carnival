@@ -84,6 +84,7 @@ def forecast_lstm(model, batch_size, X):
 
 
 series = load_modified_data("amzn")
+series = series[0:10]
 series = series.squeeze()
 
 
