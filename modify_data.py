@@ -28,34 +28,34 @@ def load_modified_data(data_source):
     # for either target or df
 
     # concatenating df observations to target
-    target_full_noindex = pd.concat([target, df], axis=0, join='outer', sort=True)
+    modified_data = pd.concat([target, df], axis=0, join='outer', sort=True)
 
     # produces array where the position of the second duplicate is marked as True
     # while that of the first is marked as false, only searches for duplicates based on 'timestamp'
-    dupes = target_full_noindex.duplicated(['timestamp'], keep='first')
+    dupes = modified_data.duplicated(['timestamp'], keep='first')
 
     # subsetting only observations marked as False (marked as non-duplicates)
     # P.S. the symbol '~' means negation for pandas
-    target_full_noindex = target_full_noindex[~dupes]
+    modified_data = modified_data[~dupes]
 
     # sorting based on timestamp
-    target_full_noindex = target_full_noindex.sort_values('timestamp')
+    modified_data = modified_data.sort_values('timestamp')
 
-    target_full_noindex = target_full_noindex.reset_index()
+    modified_data = modified_data.reset_index()
 
     # replace nan values with values of each preceding row
     i = 1
-    while i != len(target_full_noindex.index):
-        if np.isnan(target_full_noindex.iloc[i].High):
-            target_full_noindex.loc[i, "High"] = target_full_noindex.iloc[i - 1].High
+    while i != len(modified_data.index):
+        if np.isnan(modified_data.iloc[i].High):
+            modified_data.loc[i, "High"] = modified_data.iloc[i - 1].High
         i += 1
 
     # get only the timestamp and High column
-    target_full_noindex = target_full_noindex[['timestamp', 'High']].copy()
+    modified_data = modified_data[['timestamp', 'High']].copy()
 
     # setting index to 'timestamp' column
-    target_full_noindex = target_full_noindex.set_index('timestamp')
-    return target_full_noindex
+    modified_data = modified_data.set_index('timestamp')
+    return modified_data
 
 
 
