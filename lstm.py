@@ -1,25 +1,17 @@
 from pandas import DataFrame
 from pandas import Series
 from pandas import concat
-from pandas import read_csv
-from pandas import datetime
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
 from math import sqrt
-from matplotlib import pyplot
 import numpy
 from modify_data import load_modified_data
+import time
 
-# date-time parsing function for loading the dataset
-
-
-
-def parser(x):
-    return datetime.strptime('190' + x, '%Y-%m')
-
+prog_start = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
 # frame a sequence as a supervised learning problem
 def timeseries_to_supervised(data, lag=1):
@@ -89,10 +81,11 @@ def forecast_lstm(model, batch_size, X):
     return yhat[0, 0]
 
 
-# load dataset
 series = load_modified_data("amzn")
+series = series[0:10]
+series = series.squeeze()
 
-# transform data to be stationary
+
 raw_values = series.values
 diff_values = difference(raw_values, 1)
 
@@ -100,8 +93,10 @@ diff_values = difference(raw_values, 1)
 supervised = timeseries_to_supervised(diff_values, 1)
 supervised_values = supervised.values
 
-# split data into train and test-sets
-train, test = supervised_values[0:-12], supervised_values[-12:]
+# split data into train and test-sets (70% for training and 30% for testing)
+training_limit = int(0.7 * len(supervised_values))
+train, test = supervised_values[0: training_limit - 1], supervised_values[-((len(supervised_values)-training_limit)+1):]
+
 
 # transform the scale of the data
 scaler, train_scaled, test_scaled = scale(train, test)
@@ -125,12 +120,17 @@ for i in range(len(test_scaled)):
     # store forecast
     predictions.append(yhat)
     expected = raw_values[len(train) + i + 1]
-    print('Month=%d, Predicted=%f, Expected=%f' % (i + 1, yhat, expected))
+    print('Predicted=%f, Expected=%f' % (yhat, expected))
 
 # report performance
-rmse = sqrt(mean_squared_error(raw_values[-12:], predictions))
+rmse = sqrt(mean_squared_error(raw_values[-((len(supervised_values)-training_limit)+1):], predictions))
 print('Test RMSE: %.3f' % rmse)
-# line plot of observed vs predicted
-pyplot.plot(raw_values[-12:])
-pyplot.plot(predictions)
-pyplot.show()
+
+prog_end = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+
+f = open("./output/runtime.txt", "a+")
+f.write("\nProgram started at: " + prog_start + " and ended at: " + prog_end)
+f.close()
+
+
+
