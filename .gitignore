@@ -3,3 +3,4 @@ venv2
 .pyc
 .idea/
 __pycache__/
+output/
