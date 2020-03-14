@@ -50,5 +50,3 @@ def load_modified_data(data_source):
     # setting index to 'timestamp' column
     modified_data = modified_data.set_index('timestamp')
     return modified_data
-
-print(load_modified_data("amzn").head())
