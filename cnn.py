@@ -1,20 +1,16 @@
 from glob import glob
-from pandas import DatetimeIndex
-from sklearn.metrics import mean_squared_error
+from math import sqrt
+from sklearn.metrics import mean_squared_error, explained_variance_score, mean_absolute_error, mean_squared_log_error, \
+    median_absolute_error, r2_score
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Model, Sequential
 from keras.layers import Conv1D, Dense, Flatten
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 import os
-
 import numpy as np
 import pandas as pd
 import datetime as dt
 from modify_data import load_modified_data
-
-
-
-
 
 from common.utils import load_data, mape
 
@@ -22,8 +18,6 @@ if __name__ == '__main__':
     # data = pd.DataFrame(data['High'])
 
     data = load_modified_data("amzn")
-
-
 
     valid_start_dt = '2013-12-06'
     test_start_dt = '2017-01-12'
@@ -77,7 +71,7 @@ if __name__ == '__main__':
 
     print(X_train[:3])
 
-    look_back_dt = dt.datetime.strptime(valid_start_dt, '%Y-%m-%d') - dt.timedelta(days=T-1)
+    look_back_dt = dt.datetime.strptime(valid_start_dt, '%Y-%m-%d') - dt.timedelta(days=T - 1)
 
     valid = data.copy()[(data.index >= look_back_dt) & (data.index < test_start_dt)][['High']]
     print(valid.head())
@@ -163,9 +157,10 @@ if __name__ == '__main__':
     eval_df['actual'] = np.transpose(y_test).ravel()
     eval_df[['prediction', 'actual']] = scaler.inverse_transform(eval_df[['prediction', 'actual']])
     print(eval_df.head())
-    mse = mean_squared_error(eval_df['actual'], eval_df['prediction'])
+    actual = eval_df['actual']
+    predictions = eval_df['prediction']
 
-    #print(mape(eval_df['prediction'], eval_df['actual']))
+    # print(mape(eval_df['prediction'], eval_df['actual']))
 
     # eval_df[eval_df.timestamp < '2017-01-30'].plot(x='timestamp', y=['prediction', 'actual'], style=['r', 'b'],
     #                                                figsize=(15, 8))
@@ -176,4 +171,12 @@ if __name__ == '__main__':
     for m in glob('model_*.h5'):
         os.remove(m)
 
-    print("mse:", mse)
+    rmse = sqrt(mean_squared_error(actual, predictions))
+    mse = mean_squared_error(actual, predictions)
+    evs = explained_variance_score(actual, predictions)
+    mae = mean_absolute_error(actual, predictions)
+    msle = mean_squared_log_error(actual, predictions)
+    meae = median_absolute_error(actual, predictions)
+    r_square = r2_score(actual, predictions)
+    print("rmse: ", rmse, " mse: ", mse, "evs: ", evs, "mae: ", mae, "msle: ", msle, "meae: ", meae, "r_square: ",
+          r_square)
