@@ -125,6 +125,13 @@ for i in range(len(test_scaled)):
 
 actual = raw_values[-((len(supervised_values)-training_limit)+1):]
 
+# test to see if accuracy is better if nan values are replaced with 0
+# convert actual and predictions to dataframe and remove rows where actual is nan
+df = DataFrame({'actual': actual, 'predictions': predictions})
+df = df[df['actual'].notna()]
+actual = numpy.asarray(df.actual)
+predictions = list(df.predictions)
+
 # evaluate performance
 rmse = sqrt(mean_squared_error(actual, predictions))
 mse = mean_squared_error(actual, predictions)
