@@ -122,15 +122,17 @@ for i in range(len(test_scaled)):
     expected = raw_values[len(train) + i + 1]
     print('Predicted=%f, Expected=%f' % (yhat, expected))
 
+actual = raw_values[-((len(supervised_values)-training_limit)+1):]
+
 # report performance
-rmse = sqrt(mean_squared_error(raw_values[-((len(supervised_values)-training_limit)+1):], predictions))
-print('Test RMSE: %.3f' % rmse)
+rmse = sqrt(mean_squared_error(actual, predictions))
+mse = mean_squared_error(actual, predictions)
+print('rmse: ', rmse, " mse: ", mse)
 
 prog_end = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
 f = open("./output/runtime.txt", "a+")
-f.write("\nProgram started at: " + prog_start + " and ended at: " + prog_end)
+time_output = "\nProgram started at: " + prog_start + " and ended at: " + prog_end
+f.write(time_output)
 f.close()
-
-
 
