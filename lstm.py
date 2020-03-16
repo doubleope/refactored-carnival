@@ -135,6 +135,12 @@ meae = median_absolute_error(actual, predictions)
 r_square = r2_score(actual, predictions)
 print("rmse: ", rmse, " mse: ", mse, "evs: ", evs, "mae: ", mae, "msle: ", msle, "meae: ", meae, "r_square: ", r_square)
 
+# save scores to file
+scores = open("./output/scores.txt", "a+")
+scores.write("rmse: " + str(rmse) + " mse: " + str(mse) + " evs: " + str(evs) + " mae: " + str(mae) + " msle: " + \
+             str(msle) + " meae: " + str(meae) + " r_square: " + str(r_square))
+scores.close()
+
 # save runtime to file
 prog_end = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 f = open("./output/runtime.txt", "a+")

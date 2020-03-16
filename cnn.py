@@ -15,8 +15,6 @@ from modify_data import load_modified_data
 from common.utils import load_data, mape
 
 if __name__ == '__main__':
-    # data = pd.DataFrame(data['High'])
-
     data = load_modified_data("amzn")
 
     valid_start_dt = '2013-12-06'
@@ -168,6 +166,7 @@ if __name__ == '__main__':
     # plt.ylabel('High', fontsize=12)
     # plt.show()
 
+    # remove model files
     for m in glob('model_*.h5'):
         os.remove(m)
 
