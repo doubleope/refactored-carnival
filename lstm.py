@@ -1,7 +1,8 @@
 from pandas import DataFrame
 from pandas import Series
 from pandas import concat
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, explained_variance_score, mean_absolute_error, mean_squared_log_error, \
+    median_absolute_error, r2_score
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import Dense
@@ -124,13 +125,18 @@ for i in range(len(test_scaled)):
 
 actual = raw_values[-((len(supervised_values)-training_limit)+1):]
 
-# report performance
+# evaluate performance
 rmse = sqrt(mean_squared_error(actual, predictions))
 mse = mean_squared_error(actual, predictions)
-print('rmse: ', rmse, " mse: ", mse)
+evs = explained_variance_score(actual, predictions)
+mae = mean_absolute_error(actual, predictions)
+msle = mean_squared_log_error(actual, predictions)
+meae = median_absolute_error(actual, predictions)
+r_square = r2_score(actual, predictions)
+print("rmse: ", rmse, " mse: ", mse, "evs: ", evs, "mae: ", mae, "msle: ", msle, "meae: ", meae, "r_square: ", r_square)
 
+# save runtime to file
 prog_end = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-
 f = open("./output/runtime.txt", "a+")
 time_output = "\nProgram started at: " + prog_start + " and ended at: " + prog_end
 f.write(time_output)
