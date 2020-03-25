@@ -87,10 +87,12 @@ def forecast_lstm(model, batch_size, X):
     yhat = model.predict(X, batch_size=batch_size)
     return yhat[0, 0]
 
-
-# series = load_modified_data(sys.argv[1])
-series = load_modified_data("amzn")
-series = series[0:10]
+#uses command line argument
+series = load_modified_data(sys.argv[1])
+#amzn for testing
+# series = load_modified_data("amzn")
+#for testing with rows 0-10
+# series = series[0:10]
 series = series.squeeze()
 
 
@@ -134,7 +136,9 @@ for i in range(len(test_scaled)):
     print('Predicted=%f, Expected=%f' % (yhat, expected))
 
 #save prediction vs expected to data frame and csv
-pred_vs_exp.to_csv("./Results/" + sys.argv[1] + "/pred_vs_exp.csv")
+pred_vs_exp.to_csv("./Results/" + sys.argv[1] + "/pred_vs_exp.csv", index=False)
+#for testing with amzn
+# pred_vs_exp.to_csv('./Results/' + 'amzn' + '/pred_vs_exp.csv', index=False)
 
 actual = raw_values[-((len(supervised_values)-training_limit)+1):]
 
@@ -170,11 +174,13 @@ performance_evals = performance_evals.append({'rmse':rmse, \
 
 #check if respective files already exist
 pe_path = './output/lstm/' + sys.argv[1] + '/performance_evals.csv'
+#for testing with amzn
+# pe_path = './output/lstm/' + 'amzn' + '/performance_evals.csv'
 if path.exists(pe_path):
     stored_pe = read_csv(pe_path)
     performance_evals = concat([stored_pe, performance_evals])
-
-performance_evals.to_csv(pe_path)
+#if exists, appends, if not creates and writes to file
+performance_evals.to_csv(pe_path, index=False)
 
 # save scores to file
 scores = open("./output/scores.txt", "a+")
