@@ -131,14 +131,7 @@ for i in range(len(test_scaled)):
     # store forecast
     predictions.append(yhat)
     expected = raw_values[len(train) + i + 1]
-    pred_vs_exp = pred_vs_exp.append({'predictions': yhat, 'actual': expected}, \
-                                                            ignore_index=True)
     print('Predicted=%f, Expected=%f' % (yhat, expected))
-
-#save prediction vs expected to data frame and csv
-pred_vs_exp.to_csv("./Results/" + sys.argv[1] + "/pred_vs_exp.csv", index=False)
-#for testing with amzn
-# pred_vs_exp.to_csv('./Results/' + 'amzn' + '/pred_vs_exp.csv', index=False)
 
 actual = raw_values[-((len(supervised_values)-training_limit)+1):]
 
@@ -149,6 +142,12 @@ df = df[df['actual'].notna()]
 df = df[df['predictions'].notna()]
 actual = numpy.asarray(df.actual)
 predictions = list(df.predictions)
+
+#save prediction vs expected to data frame and csv
+df.to_csv("./Results/" + sys.argv[1] + "/pred_vs_exp.csv", index=False)
+
+
+
 
 # evaluate performance
 rmse = sqrt(mean_squared_error(actual, predictions))
