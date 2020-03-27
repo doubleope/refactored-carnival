@@ -18,9 +18,9 @@ from os import path
 from common.utils import load_data, mape
 
 if __name__ == '__main__':
-    data = load_modified_data(sys.argv[1])
+    # data = load_modified_data(sys.argv[1])
     #for testing with amzn
-    # data = load_modified_data('amzn')
+    data = load_modified_data('amzn')
 
 
     valid_start_dt = '2013-12-06'
@@ -166,9 +166,9 @@ if __name__ == '__main__':
     predictions = eval_df['prediction']
 
     #store eval_df as csv
-    eval_df.to_csv("./Results/cnn/" + sys.argv[1] + "/pred_vs_exp.csv", index=False)
+    # eval_df.to_csv("./Results/cnn/" + sys.argv[1] + "/pred_vs_exp.csv", index=False)
     #for testing with amzn
-    # eval_df.to_csv("./Results/cnn/" + "amzn" + "/pred_vs_exp.csv", index=False)
+    eval_df.to_csv("./Results/cnn/" + "amzn" + "/pred_vs_exp.csv", index=False)
 
     # print(mape(eval_df['prediction'], eval_df['actual']))
 
@@ -205,9 +205,9 @@ if __name__ == '__main__':
                                                     ignore_index=True)
 
     #check if respective files already exist
-    pe_path = './output/cnn/' + sys.argv[1] + '/performance_evals.csv'
+    # pe_path = './output/cnn/' + sys.argv[1] + '/performance_evals.csv'
     #for testing with amzn
-    # pe_path = './output/cnn/' + 'amzn' + '/performance_evals.csv'
+    pe_path = './output/cnn/' + 'amzn' + '/performance_evals.csv'
     if path.exists(pe_path):
         stored_pe = pd.read_csv(pe_path)
         performance_evals = pd.concat([stored_pe, performance_evals])
