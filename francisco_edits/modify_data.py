@@ -38,11 +38,11 @@ def load_modified_data(data_source):
     modified_data = modified_data.reset_index()
 
     # replace nan values with values of each preceding row
-    # i = 1
-    # while i != len(modified_data.index):
-    #     if np.isnan(modified_data.iloc[i].High):
-    #         modified_data.loc[i, "High"] = modified_data.iloc[i - 1].High
-    #     i += 1
+    i = 1
+    while i != len(modified_data.index):
+        if np.isnan(modified_data.iloc[i].High):
+            modified_data.loc[i, "High"] = modified_data.iloc[i - 1].High
+        i += 1
 
     # get only the timestamp and High column
     modified_data = modified_data[['timestamp', 'High']].copy()

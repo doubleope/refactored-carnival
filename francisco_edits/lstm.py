@@ -144,6 +144,7 @@ actual = numpy.asarray(df.actual)
 predictions = list(df.predictions)
 
 #save prediction vs expected to data frame and csv
+#TODO: change path to ./Results/lstm/.../pred_vs_exp.csv
 df.to_csv("./Results/" + sys.argv[1] + "/pred_vs_exp.csv", index=False)
 
 
