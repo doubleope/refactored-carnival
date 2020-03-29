@@ -54,64 +54,67 @@ cnn_rmse.columns, cnn_mse.columns, cnn_evs.columns, cnn_mae.columns, \
 lstm_rmse.columns, lstm_mse.columns, lstm_evs.columns, lstm_mae.columns, \
     lstm_msle.columns, lstm_meae.columns, lstm_r_square.columns = [faang for i in range(0, 7)]
 
+#normalize cnn_mse and lstm_msle
+cnn_mse = cnn_mse/1000
+lstm_msle = lstm_msle * 10
+
 #plot cnn accuracy metrics and save to png
 cnn_plotpath = './output/cnn/plots/'
-sb.barplot(data=cnn_rmse)
+sb.barplot(data=cnn_rmse, ci = None).set(xlabel='Company', ylabel='Root Means Squared Error (CNN)')
 plt.savefig(cnn_plotpath + 'cnn_rmse.png')
 plt.show()
 
-sb.barplot(data=cnn_mse)
+sb.barplot(data=cnn_mse, ci = None).set(xlabel='Company', ylabel='Means Squared Error (CNN)')
 plt.savefig(cnn_plotpath + 'cnn_mse.png')
 plt.show()
 
-sb.barplot(data=cnn_evs)
+sb.barplot(data=cnn_evs, ci = None).set(xlabel='Company', ylabel='Explained Variance Score (CNN)')
 plt.savefig(cnn_plotpath + 'cnn_evs.png')
 plt.show()
 
-sb.barplot(data=cnn_mae)
+sb.barplot(data=cnn_mae, ci = None).set(xlabel='Company', ylabel='Mean Absolute Error (CNN)')
 plt.savefig(cnn_plotpath + 'cnn_mae.png')
 plt.show()
 
-sb.barplot(data=cnn_msle)
+sb.barplot(data=cnn_msle, ci = None).set(xlabel='Company', ylabel='Mean Squared Log Error (CNN)')
 plt.savefig(cnn_plotpath + 'cnn_msle.png')
 plt.show()
 
-sb.barplot(data=cnn_meae)
+sb.barplot(data=cnn_meae, ci = None).set(xlabel='Company', ylabel='Median Absolute Error (CNN)')
 plt.savefig(cnn_plotpath + 'cnn_meae.png')
 plt.show()
 
-sb.barplot(data=cnn_r_square)
+sb.barplot(data=cnn_r_square, ci = None).set(xlabel='Company', ylabel='Coefficient of Determination (CNN)')
 plt.savefig(cnn_plotpath + 'cnn_r_square.png')
 plt.show()
 
 
 #plot lstm accuracy metrics and save to png
 lstm_plotpath = './output/lstm/plots/'
-sb.barplot(data=lstm_rmse)
+sb.barplot(data=lstm_rmse, ci = None).set(xlabel='Company', ylabel='Root Means Squared Error (LSTM)')
 plt.savefig(lstm_plotpath + 'lstm_rmse.png')
 plt.show()
 
-sb.barplot(data=lstm_mse)
+sb.barplot(data=lstm_mse, ci = None).set(xlabel='Company', ylabel='Means Squared Error (LSTM)')
 plt.savefig(lstm_plotpath + 'lstm_mse.png')
 plt.show()
 
-sb.barplot(data=lstm_evs)
+sb.barplot(data=lstm_evs, ci = None).set(xlabel='Company', ylabel='Explained Variance Score (LSTM)')
 plt.savefig(lstm_plotpath + 'lstm_evs.png')
 plt.show()
 
-sb.barplot(data=lstm_mae)
+sb.barplot(data=lstm_mae, ci = None).set(xlabel='Company', ylabel='Mean Absolute Error (LSTM)')
 plt.savefig(lstm_plotpath + 'lstm_mae.png')
 plt.show()
 
-sb.barplot(data=lstm_msle)
+sb.barplot(data=lstm_msle, ci = None).set(xlabel='Company', ylabel='Mean Squared Log Error (LSTM)')
 plt.savefig(lstm_plotpath + 'lstm_msle.png')
 plt.show()
 
-sb.barplot(data=lstm_meae)
+sb.barplot(data=lstm_meae, ci = None).set(xlabel='Company', ylabel='Median Absolute Error (LSTM)')
 plt.savefig(lstm_plotpath + 'lstm_meae.png')
 plt.show()
 
-
-sb.barplot(data=cnn_r_square)
+sb.barplot(data=cnn_r_square, ci = None).set(xlabel='Company', ylabel='Coefficient of Determination (LSTM)')
 plt.savefig(lstm_plotpath + 'lstm_r_square.png')
 plt.show()
