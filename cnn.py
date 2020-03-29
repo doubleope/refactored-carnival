@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 import datetime as dt
 from modify_data import load_modified_data
-
+from matplotlib import pyplot
 from common.utils import load_data, mape
 
 if __name__ == '__main__':
@@ -179,3 +179,8 @@ if __name__ == '__main__':
     r_square = r2_score(actual, predictions)
     print("rmse: ", rmse, " mse: ", mse, "evs: ", evs, "mae: ", mae, "msle: ", msle, "meae: ", meae, "r_square: ",
           r_square)
+    
+    acc_metrics = pd.DataFrame({'actual': actual, 'predictions': predictions})
+    acc_metrics.plot(style=['r', 'b'])
+    pyplot.savefig("./output/cnn/amzn/plot.png")
+    
