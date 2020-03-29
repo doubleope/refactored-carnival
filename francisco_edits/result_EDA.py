@@ -57,60 +57,61 @@ lstm_rmse.columns, lstm_mse.columns, lstm_evs.columns, lstm_mae.columns, \
 #plot cnn accuracy metrics and save to png
 cnn_plotpath = './output/cnn/plots/'
 sb.barplot(data=cnn_rmse)
-plt.show()
 plt.savefig(cnn_plotpath + 'cnn_rmse.png')
+plt.show()
 
 sb.barplot(data=cnn_mse)
-plt.show()
 plt.savefig(cnn_plotpath + 'cnn_mse.png')
+plt.show()
 
 sb.barplot(data=cnn_evs)
-plt.show()
 plt.savefig(cnn_plotpath + 'cnn_evs.png')
+plt.show()
 
 sb.barplot(data=cnn_mae)
-plt.show()
 plt.savefig(cnn_plotpath + 'cnn_mae.png')
+plt.show()
 
 sb.barplot(data=cnn_msle)
-plt.show()
 plt.savefig(cnn_plotpath + 'cnn_msle.png')
+plt.show()
 
 sb.barplot(data=cnn_meae)
-plt.show()
 plt.savefig(cnn_plotpath + 'cnn_meae.png')
+plt.show()
 
 sb.barplot(data=cnn_r_square)
-plt.show()
 plt.savefig(cnn_plotpath + 'cnn_r_square.png')
+plt.show()
 
 
 #plot lstm accuracy metrics and save to png
 lstm_plotpath = './output/lstm/plots/'
 sb.barplot(data=lstm_rmse)
-plt.show()
 plt.savefig(lstm_plotpath + 'lstm_rmse.png')
+plt.show()
 
 sb.barplot(data=lstm_mse)
-plt.show()
 plt.savefig(lstm_plotpath + 'lstm_mse.png')
+plt.show()
 
 sb.barplot(data=lstm_evs)
-plt.show()
 plt.savefig(lstm_plotpath + 'lstm_evs.png')
+plt.show()
 
 sb.barplot(data=lstm_mae)
-plt.show()
 plt.savefig(lstm_plotpath + 'lstm_mae.png')
+plt.show()
 
 sb.barplot(data=lstm_msle)
-plt.show()
 plt.savefig(lstm_plotpath + 'lstm_msle.png')
+plt.show()
 
 sb.barplot(data=lstm_meae)
-plt.show()
 plt.savefig(lstm_plotpath + 'lstm_meae.png')
+plt.show()
+
 
 sb.barplot(data=cnn_r_square)
-plt.show()
 plt.savefig(lstm_plotpath + 'lstm_r_square.png')
+plt.show()
