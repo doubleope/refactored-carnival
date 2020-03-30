@@ -1,6 +1,7 @@
 from pandas import DataFrame
 from pandas import Series
 from pandas import concat
+from pandas import read_csv
 from sklearn.metrics import mean_squared_error, explained_variance_score, mean_absolute_error, mean_squared_log_error, \
     median_absolute_error, r2_score
 from sklearn.preprocessing import MinMaxScaler
@@ -11,6 +12,11 @@ from math import sqrt
 import numpy
 from modify_data import load_modified_data
 import time
+from matplotlib import pyplot
+
+#for command line argument and saving to file
+import sys
+from os import path
 
 prog_start = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
@@ -81,9 +87,12 @@ def forecast_lstm(model, batch_size, X):
     yhat = model.predict(X, batch_size=batch_size)
     return yhat[0, 0]
 
-
-series = load_modified_data("amzn")
-series = series[0:10]
+#uses command line argument
+series = load_modified_data(sys.argv[1])
+#amzn for testing
+# series = load_modified_data("amzn")
+#for testing with rows 0-10
+# series = series[0:10]
 series = series.squeeze()
 
 
@@ -110,6 +119,7 @@ lstm_model.predict(train_reshaped, batch_size=1)
 
 # walk-forward validation on the test data
 predictions = list()
+pred_vs_exp = DataFrame(columns=['predictions', 'actual'])
 for i in range(len(test_scaled)):
     # make one-step forecast
     X, y = test_scaled[i, 0:-1], test_scaled[i, -1]
@@ -129,8 +139,16 @@ actual = raw_values[-((len(supervised_values)-training_limit)+1):]
 # convert actual and predictions to dataframe and remove rows where actual is nan
 df = DataFrame({'actual': actual, 'predictions': predictions})
 df = df[df['actual'].notna()]
+df = df[df['predictions'].notna()]
 actual = numpy.asarray(df.actual)
 predictions = list(df.predictions)
+
+#save prediction vs expected to data frame and csv
+#TODO: change path to ./Results/lstm/.../pred_vs_exp.csv
+df.to_csv("./Results/lstm/" + sys.argv[1] + "/pred_vs_exp.csv", index=False)
+
+
+
 
 # evaluate performance
 rmse = sqrt(mean_squared_error(actual, predictions))
@@ -141,6 +159,28 @@ msle = mean_squared_log_error(actual, predictions)
 meae = median_absolute_error(actual, predictions)
 r_square = r2_score(actual, predictions)
 print("rmse: ", rmse, " mse: ", mse, "evs: ", evs, "mae: ", mae, "msle: ", msle, "meae: ", meae, "r_square: ", r_square)
+
+#save accuracy metrics to data frame
+performance_evals = DataFrame(columns=['rmse', 'mse', 'evs', 'mae', \
+                                        'msle', 'meae', 'r_square'])
+performance_evals = performance_evals.append({'rmse':rmse, \
+                                                'mse':mse, \
+                                                'evs':evs, \
+                                                'mae':mae, \
+                                                'msle':msle, \
+                                                'meae':meae, \
+                                                'r_square': r_square}, \
+                                                ignore_index=True)
+
+#check if respective files already exist
+pe_path = './output/lstm/' + sys.argv[1] + '/performance_evals.csv'
+#for testing with amzn
+# pe_path = './output/lstm/' + 'amzn' + '/performance_evals.csv'
+if path.exists(pe_path):
+    stored_pe = read_csv(pe_path)
+    performance_evals = concat([stored_pe, performance_evals])
+#if exists, appends, if not creates and writes to file
+performance_evals.to_csv(pe_path, index=False)
 
 # save scores to file
 scores = open("./output/scores.txt", "a+")
@@ -154,4 +194,3 @@ f = open("./output/runtime.txt", "a+")
 time_output = "\nProgram started at: " + prog_start + " and ended at: " + prog_end
 f.write(time_output)
 f.close()
-

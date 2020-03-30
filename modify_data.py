@@ -37,7 +37,7 @@ def load_modified_data(data_source):
 
     modified_data = modified_data.reset_index()
 
-    #replace nan values with values of each preceding row
+    # replace nan values with values of each preceding row
     i = 1
     while i != len(modified_data.index):
         if np.isnan(modified_data.iloc[i].High):
