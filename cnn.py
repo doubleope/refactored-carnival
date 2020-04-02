@@ -213,3 +213,8 @@ if __name__ == '__main__':
         performance_evals = pd.concat([stored_pe, performance_evals])
     #if exists, appends, if not creates and writes to file
     performance_evals.to_csv(pe_path, index=False)
+    
+    # save plot
+    acc_metrics = pd.DataFrame({'actual': actual, 'predictions': predictions})
+    acc_metrics.plot(style=['r', 'k'])
+    pyplot.savefig("./output/cnn/amzn/plot.png")

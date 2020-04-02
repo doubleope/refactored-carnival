@@ -194,3 +194,6 @@ f = open("./output/runtime.txt", "a+")
 time_output = "\nProgram started at: " + prog_start + " and ended at: " + prog_end
 f.write(time_output)
 f.close()
+
+df.plot(style=['r', 'b'])
+pyplot.savefig("./output/amzn/plot.png")
