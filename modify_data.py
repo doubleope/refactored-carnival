@@ -52,5 +52,5 @@ def load_modified_data(data_source):
 
     return modified_data
 
-if __name__ == __main__:
+if __name__ == '__main__':
     print(load_modified_data("amzn").head(20))
