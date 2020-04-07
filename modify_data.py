@@ -51,3 +51,6 @@ def load_modified_data(data_source):
     modified_data = modified_data.set_index('timestamp')
 
     return modified_data
+
+if __name__ == __main__:
+    print(load_modified_data("amzn").head(20))
