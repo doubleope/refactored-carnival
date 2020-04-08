@@ -196,4 +196,4 @@ f.write(time_output)
 f.close()
 
 df.plot(style=['r', 'b'])
-pyplot.savefig("./output/amzn/plot.png")
+pyplot.savefig("./output/lstm/amzn/plot.png")
