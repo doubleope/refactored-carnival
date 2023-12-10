@@ -1,6 +1,7 @@
 from glob import glob
 from math import sqrt
-from sklearn.metrics import mean_squared_error, explained_variance_score, mean_absolute_error, mean_squared_log_error, \
+from sklearn.metrics import mean_squared_error, explained_variance_score, \
+    mean_absolute_error, mean_squared_log_error, \
     median_absolute_error, r2_score
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Model, Sequential
@@ -11,11 +12,16 @@ import numpy as np
 import pandas as pd
 import datetime as dt
 from modify_data import load_modified_data
+import sys
+from os import path
 
 from common.utils import load_data, mape
 
 if __name__ == '__main__':
-    data = load_modified_data("amzn")
+    data = load_modified_data(sys.argv[1])
+    #for testing with amzn
+    # data = load_modified_data('amzn')
+
 
     valid_start_dt = '2013-12-06'
     test_start_dt = '2017-01-12'
@@ -143,8 +149,8 @@ if __name__ == '__main__':
     for t in range(1, T + 1):
         test_shifted['High_t-' + str(T - t)] = test_shifted['High'].shift(T - t, freq='D')
     test_shifted = test_shifted.dropna(how='any')
-    y_test = test_shifted['y_t+1'].as_matrix()
-    X_test = test_shifted[['High_t-' + str(T - t) for t in range(1, T + 1)]].as_matrix()
+    y_test = test_shifted['y_t+1'].values
+    X_test = test_shifted[['High_t-' + str(T - t) for t in range(1, T + 1)]].values
     X_test = X_test[..., np.newaxis]
 
     predictions = model.predict(X_test)
@@ -158,6 +164,11 @@ if __name__ == '__main__':
     print(eval_df.head())
     actual = eval_df['actual']
     predictions = eval_df['prediction']
+
+    #store eval_df as csv
+    eval_df.to_csv("./Results/cnn/" + sys.argv[1] + "/pred_vs_exp.csv", index=False)
+    #for testing with amzn
+    # eval_df.to_csv("./Results/cnn/" + "amzn" + "/pred_vs_exp.csv", index=False)
 
     # print(mape(eval_df['prediction'], eval_df['actual']))
 
@@ -180,3 +191,30 @@ if __name__ == '__main__':
     r_square = r2_score(actual, predictions)
     print("rmse: ", rmse, " mse: ", mse, "evs: ", evs, "mae: ", mae, "msle: ", msle, "meae: ", meae, "r_square: ",
           r_square)
+
+    #save accuracy metrics to data frame
+    performance_evals = pd.DataFrame(columns=['rmse', 'mse', 'evs', 'mae', \
+                                            'msle', 'meae', 'r_square'])
+    performance_evals = performance_evals.append({'rmse':rmse, \
+                                                    'mse':mse, \
+                                                    'evs':evs, \
+                                                    'mae':mae, \
+                                                    'msle':msle, \
+                                                    'meae':meae, \
+                                                    'r_square': r_square}, \
+                                                    ignore_index=True)
+
+    #check if respective files already exist
+    pe_path = './output/cnn/' + sys.argv[1] + '/performance_evals.csv'
+    #for testing with amzn
+    # pe_path = './output/cnn/' + 'amzn' + '/performance_evals.csv'
+    if path.exists(pe_path):
+        stored_pe = pd.read_csv(pe_path)
+        performance_evals = pd.concat([stored_pe, performance_evals])
+    #if exists, appends, if not creates and writes to file
+    performance_evals.to_csv(pe_path, index=False)
+    
+    # save plot
+    acc_metrics = pd.DataFrame({'actual': actual, 'predictions': predictions})
+    acc_metrics.plot(style=['r', 'k'])
+    pyplot.savefig("./output/cnn/amzn/plot.png")
