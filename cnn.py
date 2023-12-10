@@ -56,13 +56,14 @@ if __name__ == '__main__':
 
     print(train_shifted)
 
-    y_train = train_shifted[['y_t+1']].as_matrix()
+    y_train = train_shifted[['y_t+1']].values
+
 
     print(y_train.shape)
 
     print(y_train[:3])
 
-    X_train = train_shifted[['High_t-' + str(T - t) for t in range(1, T + 1)]].as_matrix()
+    X_train = train_shifted[['High_t-' + str(T - t) for t in range(1, T + 1)]].values
     X_train = X_train[..., np.newaxis]
 
     print(X_train.shape)
@@ -82,8 +83,8 @@ if __name__ == '__main__':
     for t in range(1, T + 1):
         valid_shifted['High_t-' + str(T - t)] = valid_shifted['High'].shift(T - t, freq='D')
     valid_shifted = valid_shifted.dropna(how='any')
-    y_valid = valid_shifted['y+1'].as_matrix()
-    X_valid = valid_shifted[['High_t-' + str(T - t) for t in range(1, T + 1)]].as_matrix()
+    y_valid = valid_shifted['y+1'].values
+    X_valid = valid_shifted[['High_t-' + str(T - t) for t in range(1, T + 1)]].values
     X_valid = X_valid[..., np.newaxis]
 
     print(y_valid.shape)

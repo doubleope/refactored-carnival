@@ -1,4 +1,3 @@
-from matplotlib import pyplot
 from pandas import DataFrame
 from pandas import Series
 from pandas import concat
@@ -12,9 +11,9 @@ from math import sqrt
 import numpy
 from modify_data import load_modified_data
 import time
+from matplotlib import pyplot
 
 prog_start = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-
 
 # frame a sequence as a supervised learning problem
 def timeseries_to_supervised(data, lag=1):
@@ -85,7 +84,9 @@ def forecast_lstm(model, batch_size, X):
 
 
 series = load_modified_data("amzn")
+series = series[0:15]
 series = series.squeeze()
+
 
 raw_values = series.values
 diff_values = difference(raw_values, 1)
@@ -96,8 +97,8 @@ supervised_values = supervised.values
 
 # split data into train and test-sets (70% for training and 30% for testing)
 training_limit = int(0.7 * len(supervised_values))
-train, test = supervised_values[0: training_limit - 1], supervised_values[
-                                                        -((len(supervised_values) - training_limit) + 1):]
+train, test = supervised_values[0: training_limit - 1], supervised_values[-((len(supervised_values)-training_limit)+1):]
+
 
 # transform the scale of the data
 scaler, train_scaled, test_scaled = scale(train, test)
@@ -123,7 +124,7 @@ for i in range(len(test_scaled)):
     expected = raw_values[len(train) + i + 1]
     print('Predicted=%f, Expected=%f' % (yhat, expected))
 
-actual = raw_values[-((len(supervised_values) - training_limit) + 1):]
+actual = raw_values[-((len(supervised_values)-training_limit)+1):]
 
 # test to see if accuracy is better if nan values are replaced with 0
 # convert actual and predictions to dataframe and remove rows where actual is nan
@@ -156,5 +157,6 @@ time_output = "\nProgram started at: " + prog_start + " and ended at: " + prog_e
 f.write(time_output)
 f.close()
 
-df.plot(style=['r', 'b'])
+pyplot.plot(actual)
+pyplot.plot(predictions)
 pyplot.savefig("./output/amzn/plot.png")
